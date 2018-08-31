@@ -9,4 +9,4 @@ yarn install
 
 ## Usage
 
-ping google.com | node index.js
+ping -s 1200 google.com | node index.js

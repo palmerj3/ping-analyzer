@@ -12,7 +12,7 @@ const GRAPH_CONFIG = {
 const GRAPH_MAX = 60;
 const GRAPH_TICK = 5;
 
-const RE_PING_RESPONSE = /([\d]{2}) bytes from ([\d\.]*): icmp_seq=([\d]*) ttl=([\d]*) time=([\d\.]*) ms/;
+const RE_PING_RESPONSE = /([\d]*) bytes from ([\d\.]*): icmp_seq=([\d]*) ttl=([\d]*) time=([\d\.]*) ms/;
 const RE_TIMEOUT_RESPONSE = /Request timeout for icmp_seq ([\d]*)/
 
 const ERROR_HIGHLIGHT = chalk.bgRed.white;
@@ -84,6 +84,9 @@ rl.on('line', function(line) {
     responseNum++;
     latencySum += time;
 
+    console.log('TIME: ', time);
+    console.log('RAW:', responseMatch[5]);
+
     lastLatency = `${time}`;
 
     push_to_graph(time);
@@ -112,6 +115,8 @@ rl.on('line', function(line) {
 
     latencyLevel = 'error';
     lastLatency = 'timeout';
+  } else {
+    return;
   }
 
   console.clear();

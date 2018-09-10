@@ -11,6 +11,10 @@ const GRAPH_CONFIG = {
 
 const GRAPH_MAX = 60;
 const GRAPH_TICK = 5;
+const MAX_GRAPH_VALUE = 300;  // Maximum y-height represents max usable ping latency
+
+// Minimum latency to consider unusable
+const TIMEOUT_LATENCY_MIN = 600;
 
 const RE_PING_RESPONSE = /([\d]*) bytes from ([\d\.]*): icmp_seq=([\d]*) ttl=([\d]*) time=([\d\.]*) ms/;
 const RE_TIMEOUT_RESPONSE = /Request timeout for icmp_seq ([\d]*)/
@@ -42,7 +46,11 @@ const push_to_graph = (latency) => {
       latencyGraph.shift();
     }
 
-    latencyGraph.push(latency);
+    if (latency > MAX_GRAPH_VALUE) {
+      latencyGraph.push(MAX_GRAPH_VALUE);
+    } else {
+      latencyGraph.push(latency);
+    }
 
     lastGraphTick = GRAPH_TICK;
   } else {
@@ -84,23 +92,21 @@ rl.on('line', function(line) {
     responseNum++;
     latencySum += time;
 
-    console.log('TIME: ', time);
-    console.log('RAW:', responseMatch[5]);
-
     lastLatency = `${time}`;
 
     push_to_graph(time);
 
     // Include DNS lookups in this check
     // ping will often work on mobile but DNS lookups fail so it's a false-positive
-    if (time > 1000 || dnsLookupStatus === false) {
+    if (time > TIMEOUT_LATENCY_MIN || dnsLookupStatus === false) {
       numOffline++;
+      isOnline = false;
     } else {
       isOnline = true;
       numOnline++;
     }
 
-    if (time > 1000) {
+    if (time > TIMEOUT_LATENCY_MIN) {
       latencyLevel = 'error';
     } else if (time > 100) {
       latencyLevel = 'warning';
@@ -111,10 +117,12 @@ rl.on('line', function(line) {
     numTimeouts++;
     numOffline++;
 
-    push_to_graph(0);
-
     latencyLevel = 'error';
     lastLatency = 'timeout';
+    isOnline = false;
+
+    // Show -10 for timeout so we see visual dip
+    push_to_graph(-10.0);
   } else {
     return;
   }

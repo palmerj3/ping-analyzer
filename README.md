@@ -5,10 +5,8 @@ Analyzes network performance on the terminal
 
 ## Installation
 
-cd path/to/this/repo
-
-yarn install
+npm install -g ping-analyzer
 
 ## Usage
 
-ping -s 1200 google.com | node index.js
+ping -s 1200 google.com | ping-analyzer

@@ -157,10 +157,10 @@ rl.on('line', function(line) {
 
   console.log();
   console.log(chalk.underline.bold('TRIP SUMMARY'));
-  console.log('Average latency: ', (latencySum / responseNum).toPrecision(5));
+  console.log(`Average latency: ${(latencySum / responseNum).toPrecision(5)}ms`);
   console.log('Timeouts:', numTimeouts);
-  console.log('Offline time:', numOffline);
-  console.log('Online time:', numOnline);
+  console.log(`Offline: ${numOffline}s`);
+  console.log(`Online: ${numOnline}s`);
   console.log('Online Percentage:', `${((numOnline / (numOnline + numOffline)) * 100).toPrecision(4)}%`);
   console.log();
 

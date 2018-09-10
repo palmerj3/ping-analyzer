@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const chalk = require('chalk');
 const dns = require('dns');
 const asciichart = require('asciichart')

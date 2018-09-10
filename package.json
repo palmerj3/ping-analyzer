@@ -4,10 +4,11 @@
   "main": "index.js",
   "license": "MIT",
   "engines": {
-    "node": ">=6.0"
+    "node": ">=6.11.5"
   },
   "dependencies": {
     "asciichart": "^1.5.7",
     "chalk": "^2.4.1"
-  }
+  },
+  "bin": "./index.js"
 }

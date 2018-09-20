@@ -16,7 +16,7 @@ const GRAPH_TICK = 5;
 const MAX_GRAPH_VALUE = 300;  // Maximum y-height represents max usable ping latency
 
 // Minimum latency to consider unusable
-const TIMEOUT_LATENCY_MIN = 600;
+const TIMEOUT_LATENCY_MIN = 101;
 
 const RE_PING_RESPONSE = /([\d]*) bytes from ([\d\.]*): icmp_seq=([\d]*) ttl=([\d]*) time=([\d\.]*) ms/;
 const RE_TIMEOUT_RESPONSE = /Request timeout for icmp_seq ([\d]*)/
@@ -123,8 +123,8 @@ rl.on('line', function(line) {
     lastLatency = 'timeout';
     isOnline = false;
 
-    // Show -10 for timeout so we see visual dip
-    push_to_graph(-10.0);
+    // Show high number on graph to represent timeout
+    push_to_graph(10000);
   } else {
     return;
   }

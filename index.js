@@ -39,6 +39,8 @@ let responseNum = 0;
 let numTimeouts = 0;
 let numOffline = 0;
 let numOnline = 0;
+let maxTimeOnline = 0;
+let currentTimeOnline = 0;
 let latencyGraph = [];
 let lastGraphTick = GRAPH_TICK;
 
@@ -129,6 +131,16 @@ rl.on('line', function(line) {
     return;
   }
 
+  if (isOnline) {
+    currentTimeOnline++;
+
+    if (currentTimeOnline > maxTimeOnline) {
+      maxTimeOnline = currentTimeOnline;
+    }
+  } else {
+    currentTimeOnline = 0;
+  }
+
   console.clear();
 
   console.log(chalk.underline.bold('CURRENT STATE'));
@@ -160,6 +172,7 @@ rl.on('line', function(line) {
   console.log();
   console.log(chalk.underline.bold('TRIP SUMMARY'));
   console.log(`Average latency: ${(latencySum / responseNum).toPrecision(5)}ms`);
+  console.log(`Max Time Online: ${maxTimeOnline}s`);
   console.log('Timeouts:', numTimeouts);
   console.log(`Offline: ${numOffline}s`);
   console.log(`Online: ${numOnline}s`);
